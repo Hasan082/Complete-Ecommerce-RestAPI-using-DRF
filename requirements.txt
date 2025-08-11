@@ -1,0 +1,10 @@
+Django==4.2.16                  # LTS, stable release
+djangorestframework==3.14.0     # Latest compatible with Django 4.2
+dj-rest-auth==7.0.1              # Auth management
+django-allauth==65.10          # Social & email authentication
+django-cleanup==9.0.0            # Auto file cleanup
+django-filter==22.1              # Filtering in DRF
+drf-spectacular==0.28.0          # API schema & docs
+Markdown==3.4.1                  # DRF browsable API markdown
+pillow==10.4.0
+requests
