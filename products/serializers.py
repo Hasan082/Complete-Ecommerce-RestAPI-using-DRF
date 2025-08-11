@@ -16,6 +16,9 @@ class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
         fields = '__all__'
+        extra_kwargs = {
+            'slug': {'read_only': True}
+        }
     
     def to_representation(self, instance):
         representation = super().to_representation(instance)

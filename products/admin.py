@@ -4,7 +4,7 @@ from .models import Category, Product
 
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
-    prepopulated_fields = {'slug': ('name',)}
     list_display = ('name', 'slug')
+    editable_fields = ['slug']
     search_fields = ('name',)
     
