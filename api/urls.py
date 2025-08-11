@@ -11,6 +11,7 @@ from products.views import CategryViewSet
 from rest_framework.routers import DefaultRouter
 router = DefaultRouter()
 router.register(r'categories', CategryViewSet, basename='category')
+router.register(r'products', CategryViewSet, basename='category')
 
 
 

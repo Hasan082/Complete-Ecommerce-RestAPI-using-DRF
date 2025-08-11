@@ -13,3 +13,10 @@ class CategryViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticatedOrReadOnly]
     read_only_fields = ['slug']
     lookup_field = 'slug'
+    
+    
+class ProductViewSet(viewsets.ModelViewSet):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]
+    lookup_field = 'slug' 
