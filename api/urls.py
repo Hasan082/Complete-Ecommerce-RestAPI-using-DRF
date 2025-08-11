@@ -4,14 +4,14 @@ from drf_spectacular.views import (
     SpectacularRedocView,
     SpectacularSwaggerView,
 )
-from products.views import CategryViewSet
+from products.views import CategryViewSet, ProductViewSet
 
 
 
 from rest_framework.routers import DefaultRouter
 router = DefaultRouter()
 router.register(r'categories', CategryViewSet, basename='category')
-router.register(r'products', CategryViewSet, basename='category')
+router.register(r'products', ProductViewSet, basename='products')
 
 
 

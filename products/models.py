@@ -9,7 +9,7 @@ from jsonschema import ValidationError
 
 class Category(models.Model):
     name = models.CharField(max_length=100, unique=True)
-    slug = AutoSlugField(populate_from="name", unique=True)  # type: ignore
+    slug = AutoSlugField(populate_from="name", unique=True, db_index=True)  # type: ignore
 
     class Meta:
         ordering = ["name"]
@@ -24,7 +24,7 @@ class Category(models.Model):
 
 class Product(models.Model):
     title = models.CharField(max_length=100)
-    slug = AutoSlugField(populate_from="title", unique=True)  # type: ignore
+    slug = AutoSlugField(populate_from="title", unique=True, db_index=True)  # type: ignore
     description = models.TextField(blank=True)
     image_url = models.ImageField(blank=True)
     price = models.DecimalField(max_digits=10, decimal_places=2)
