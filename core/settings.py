@@ -49,6 +49,7 @@ OUR_APPS = [
 
 THIRD_PARTY_APPS = [
     'rest_framework',
+    'django_filters',
     'rest_framework.authtoken',
     'drf_spectacular',
     'django_cleanup.apps.CleanupConfig',
@@ -154,6 +155,7 @@ REST_FRAMEWORK = {
         "first_name": {"required": False},
         "last_name": {"required": False}, 
     },
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
     'REGISTER_SERIALIZER': 'user_accounts.serializers.CustomRegistrationSerializer',
     # YOUR SETTINGS
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',

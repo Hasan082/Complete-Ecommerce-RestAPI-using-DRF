@@ -45,9 +45,13 @@ class Product(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     
-    
+    class Meta:
+        ordering = ["-created_at"]
+        
     def clean(self):
         super().clean()
+        if self.price <= 0:
+            raise ValidationError("Price must be greater than zero.")
         # Validate discount percentage range
         if self.discount_percentage < 0 or self.discount_percentage > 100:
             raise ValidationError("Discount percentage must be between 0 and 100.")
