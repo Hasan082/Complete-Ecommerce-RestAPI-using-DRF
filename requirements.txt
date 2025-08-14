@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 Django==4.2.16                  # LTS, stable release
 djangorestframework==3.14.0     # Latest compatible with Django 4.2
 dj-rest-auth==7.0.1              # Auth management
@@ -11,3 +12,32 @@ django-cleanup==9.0.0            # Auto file cleanup
 requests==2.31.0                  # HTTP library
 django-autoslug==1.9.9
 pipdeptree
+=======
+asgiref==3.9.1
+attrs==25.3.0
+certifi==2025.8.3
+charset-normalizer==3.4.3
+dj-rest-auth==7.0.1
+Django==4.2.16
+django-allauth==65.10.0
+django-autoslug==1.9.9
+django-cleanup==9.0.0
+django-filter==22.1
+djangorestframework==3.14.0
+drf-spectacular==0.28.0
+idna==3.10
+inflection==0.5.1
+jsonschema==4.25.0
+jsonschema-specifications==2025.4.1
+Markdown==3.4.1
+pillow==10.4.0
+pytz==2025.2
+PyYAML==6.0.2
+referencing==0.36.2
+requests==2.32.4
+rpds-py==0.27.0
+sqlparse==0.5.3
+typing_extensions==4.14.1
+uritemplate==4.2.0
+urllib3==2.5.0
+>>>>>>> e9133dc0e2b1b7fd2f8ea6fd7e0c283c65ec4402

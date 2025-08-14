@@ -18,7 +18,6 @@ class ProductSerializer(serializers.ModelSerializer):
     discounted_price = serializers.DecimalField(
         max_digits=10, decimal_places=2, read_only=True
     )
-    price = serializers.DecimalField(max_digits=10, decimal_places=2)
 
     class Meta:
         model = Product
