@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 from django.shortcuts import render
 from .models import Category, Product
 from .serializers import CategorySerializer, ProductSerializer
@@ -30,3 +31,27 @@ class ProductViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticatedOrReadOnly]
     pagination_class = StandardResultPagination
     lookup_field = 'slug'
+=======
+from django.shortcuts import render
+from .models import Category, Product
+from .serializers import CategorySerializer, ProductSerializer
+from rest_framework import viewsets
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
+
+
+
+
+class CategryViewSet(viewsets.ModelViewSet):
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]
+    read_only_fields = ['slug']
+    lookup_field = 'slug'
+    
+    
+class ProductViewSet(viewsets.ModelViewSet):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]
+    lookup_field = 'slug' 
+>>>>>>> e9133dc0e2b1b7fd2f8ea6fd7e0c283c65ec4402
