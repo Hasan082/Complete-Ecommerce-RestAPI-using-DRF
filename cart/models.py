@@ -2,8 +2,8 @@ from decimal import Decimal
 from django.db import models
 from django.conf import settings
 from products.models import Product
+from django.contrib.auth.models import User
 
-User = settings.AUTH_USER_MODEL
 
 class Cart(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="cart")

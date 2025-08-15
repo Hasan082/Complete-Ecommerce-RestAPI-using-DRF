@@ -178,6 +178,10 @@ ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
 ACCOUNT_EMAIL_VERIFICATION = 'optional'
-
+CSRF_TRUSTED_ORIGINS = ["http://127.0.0.1:8000"]
+CSRF_COOKIE_SECURE = False
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+
+# ACCOUNT_ADAPTER = "user_accounts.adapter.CustomAccountAdapter"
