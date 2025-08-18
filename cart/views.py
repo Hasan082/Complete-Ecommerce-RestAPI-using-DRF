@@ -8,6 +8,7 @@ from django.db.models import F
 
 @extend_schema(tags=["Cart"])
 class CartViewSet(viewsets.ViewSet):
+    serializer_class = CartSerializer
     """
     A viewset for CartViewSet:
     - One cart per user (or per session for guests).
@@ -53,6 +54,26 @@ class CartViewSet(viewsets.ViewSet):
         cart = self._get_cart(request)
         product = request.data.get("product")
         quantity = int(request.data.get("quantity", 1))
+        
+        # If the product ID is not provided, return an error
+        if product is None:
+            return Response({"error": "Product ID is required"}, status=400)
+
+        # If the quantity is not provided, set it to 1
+        if quantity is None:
+            quantity = 1
+
+        # Validation 1: Check product ID
+        if not product:
+            return Response({"error": "Product ID is required"}, status=400)
+        
+        # Validation 2: Make sure the value is a valid positive integer
+        try:
+            quantity = int(quantity)
+            if quantity < 1:
+                return Response({"error": "Quantity must be at least 1"}, status=400)
+        except (ValueError, TypeError):
+            return Response({"error": "Quantity must be an integer"}, status=400)
 
         cart_item, created = CartItem.objects.get_or_create(
             cart=cart, product_id=product,
@@ -77,6 +98,13 @@ class CartViewSet(viewsets.ViewSet):
         {"removed": True}. If the deletion fails (because the item does not exist),
         it returns a JSON response with {"removed": False}.
         """
+        # Validation: Check product ID
+        cart = self._get_cart(request)
+        product_id = request.data.get("product")
+        
+        if not product_id:
+            return Response({"error": "Product ID is required"}, status=400)
+        
         cart = self._get_cart(request)
         product_id = request.data.get("product")
         deleted, _ = CartItem.objects.filter(cart=cart, product_id=product_id).delete()

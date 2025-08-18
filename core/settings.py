@@ -164,6 +164,9 @@ REST_FRAMEWORK = {
     "USER_DETAILS_SERIALIZER": "user_accounts.serializers.UserSerializer",
     # SCHEMA SETTINGS
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+    ],
 }
 
 
@@ -210,10 +213,10 @@ SPECTACULAR_SETTINGS = {
     ],
 
     # Optional: Default server info
-    'SERVERS': [
-        {'url': 'http://localhost:8000', 'description': 'Development server'},
-        {'url': 'https://api.glovendar.enghasan.com', 'description': 'Production server'}
-    ],
+    # 'SERVERS': [
+    #     {'url': 'http://localhost:8000', 'description': 'Development server'},
+    #     {'url': 'https://api.glovendar.enghasan.com', 'description': 'Production server'}
+    # ],
 
     # Optional: Auto tags endpoints based on ViewSet or router
     'AUTO_TAGS': 'list',  
@@ -231,19 +234,17 @@ SITE_ID = 1
 # User Authentication Settings
 # ----------------------------
 
-# Disable username requirement
-ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_LOGIN_FIELDS = {
+    "username": {"required": False},
+    "email": {"required": True},
+}
 
-# Email is required and used for login
-ACCOUNT_EMAIL_REQUIRED = True
-ACCOUNT_AUTHENTICATION_METHOD = 'email'
+# Email verification (optional)
+ACCOUNT_EMAIL_VERIFICATION = "optional"
 
-# Email verification (optional, can be "mandatory" if needed)
-ACCOUNT_EMAIL_VERIFICATION = 'optional'
-
-# CSRF settings (for local development)
+# CSRF settings for local development
 CSRF_TRUSTED_ORIGINS = ["http://127.0.0.1:8000"]
-CSRF_COOKIE_SECURE = False
+CSRF_COOKIE_SECURE = True
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 

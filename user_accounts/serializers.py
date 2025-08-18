@@ -3,21 +3,16 @@ from dj_rest_auth.serializers import LoginSerializer
 from rest_framework import serializers
 from .models import Profile
 from django.contrib.auth.models import User
+from django.contrib.auth import authenticate
 
 class CustomRegistrationSerializer(RegisterSerializer):
     _has_phone_field = False
-    username = None 
+
     email = serializers.EmailField(required=True)
     first_name = serializers.CharField(required=True)
     last_name = serializers.CharField(required=True)
     phone = serializers.CharField(required=True)
     address = serializers.CharField(required=True)
-    
-    def get_fields(self):
-        """Remove username from fields entirely for Swagger and DRF."""
-        fields = super().get_fields()
-        fields.pop('username', None)  # remove if exists
-        return fields
 
     def get_cleaned_data(self):
         """Returns validated registration data for user and profile."""
@@ -60,12 +55,11 @@ class CustomRegistrationSerializer(RegisterSerializer):
         return user
     
 
-class CustomLoginSerializer(LoginSerializer):
-    username = None
-    email = serializers.EmailField(required=True)
-    password = serializers.CharField(required=True, write_only=True)   
+# class CustomLoginSerializer(LoginSerializer):
+#     username = None
+#     email = serializers.EmailField(required=True)
+#     password = serializers.CharField(required=True, write_only=True)   
     
-
 
 class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
