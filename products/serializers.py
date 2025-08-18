@@ -49,3 +49,10 @@ class ProductSerializer(serializers.ModelSerializer):
 
     def get_stock_status(self, obj):
         return obj.stock_status()
+
+# Product Mini serializer, it is required for cart  because
+# In cart all product info is redunant
+class ProductCartSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Product
+        fields = ['id', 'title', 'price', 'discounted_price', 'slug', 'image_url']

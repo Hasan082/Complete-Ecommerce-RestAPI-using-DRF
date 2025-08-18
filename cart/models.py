@@ -56,7 +56,7 @@ class Cart(models.Model):
     def total_discount(self):
         """Total SAviong from discount"""
         return sum(
-            (item.product.price - item.product.discounted_price) for item in self.items.select_related('product').all() # type: ignore
+            (item.product.price - item.product.discounted_price) * item.quantity for item in self.items.select_related('product').all() # type: ignore
         )
         
     @property

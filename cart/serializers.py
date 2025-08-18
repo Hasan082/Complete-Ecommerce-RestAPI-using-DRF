@@ -2,14 +2,17 @@ from rest_framework import serializers
 from .models import Cart, CartItem
 from products.models import Product
 
+
+
+# This is the new, leaner serializer for the cart
+class ProductCartSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Product
+        fields = ['id', 'title', 'price', 'discounted_price', 'slug', 'image_url']
+
 class CartItemSerializer(serializers.ModelSerializer):
-    product_title = serializers.CharField(source='product.title', read_only=True)
-    product_price = serializers.DecimalField(
-        source='product.price', max_digits=10, decimal_places=2, read_only=True
-    )
-    product_discounted_price = serializers.DecimalField(
-        source='product.discounted_price', max_digits=10, decimal_places=2, read_only=True
-    )
+    product = ProductCartSerializer(read_only=True)
+    
     item_total = serializers.DecimalField(
         max_digits=10, decimal_places=2, read_only=True
     )
@@ -19,9 +22,6 @@ class CartItemSerializer(serializers.ModelSerializer):
         fields = [
             'id',
             'product',
-            'product_title',
-            'product_price',
-            'product_discounted_price',
             'quantity',
             'item_total',
         ]
