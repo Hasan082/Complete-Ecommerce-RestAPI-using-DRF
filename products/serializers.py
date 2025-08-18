@@ -14,6 +14,14 @@ class CategorySerializer(serializers.ModelSerializer):
 
 class ProductSerializer(serializers.ModelSerializer):
     category = CategorySerializer(read_only=True)
+    
+    # For write, accept category ID
+    category_id = serializers.PrimaryKeyRelatedField(
+        queryset=Category.objects.all(),
+        source='category',
+        write_only=True
+    )
+
     stock_status = serializers.SerializerMethodField()
     discounted_price = serializers.DecimalField(
         max_digits=10, decimal_places=2, read_only=True
@@ -33,7 +41,8 @@ class ProductSerializer(serializers.ModelSerializer):
             "stock",
             "stock_status",
             "is_active",
-            "category",
+            "category", 
+            "category_id", 
             "created_at",
             "updated_at",
         ]
@@ -49,6 +58,7 @@ class ProductSerializer(serializers.ModelSerializer):
 
     def get_stock_status(self, obj):
         return obj.stock_status()
+
 
 # Product Mini serializer, it is required for cart  because
 # In cart all product info is redunant
