@@ -177,7 +177,7 @@ SPECTACULAR_SETTINGS = {
         "Designed for fast, secure, and scalable integrations."
     ),
     'VERSION': '1.0.0',
-    'SERVE_INCLUDE_SCHEMA': False,  # Serve schema via /api/schema/ endpoint
+    'SERVE_INCLUDE_SCHEMA': True,  # Serve schema via /api/schema/ endpoint
 
     # OpenAPI specifics
     'SCHEMA_PATH_PREFIX': r'/api/',  # Only include paths starting with /api/
