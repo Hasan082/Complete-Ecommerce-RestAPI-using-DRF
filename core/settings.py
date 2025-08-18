@@ -161,27 +161,87 @@ REST_FRAMEWORK = {
     },
     'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
     'REGISTER_SERIALIZER': 'user_accounts.serializers.CustomRegistrationSerializer',
-    # YOUR SETTINGS
+    "USER_DETAILS_SERIALIZER": "user_accounts.serializers.UserSerializer",
+    # SCHEMA SETTINGS
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
 }
 
 
 SPECTACULAR_SETTINGS = {
-    'TITLE': 'Your Project API',
-    'DESCRIPTION': 'Your project description',
+    # Basic metadata
+    'TITLE': 'Glovendar E-commerce API',
+    'DESCRIPTION': (
+        "Glovendar is a modern e-commerce platform API. "
+        "It provides endpoints for managing products, categories, carts, "
+        "user authentication, and order processing. "
+        "Designed for fast, secure, and scalable integrations."
+    ),
     'VERSION': '1.0.0',
-    'SERVE_INCLUDE_SCHEMA': False,
-    # OTHER SETTINGS
+    'SERVE_INCLUDE_SCHEMA': False,  # Serve schema via /api/schema/ endpoint
+
+    # OpenAPI specifics
+    'SCHEMA_PATH_PREFIX': r'/api/',  # Only include paths starting with /api/
+    'COMPONENT_SPLIT_REQUEST': True,  # Split request and response schemas
+    'COMPONENT_SPLIT_PATCH': True,    # Separate PATCH from PUT
+    'COMPONENT_NO_READ_ONLY_REQUIRED': False,  # Read-only fields are not required in request
+    'ENUM_NAME_OVERRIDES': {},
+
+    # Authentication
+    'SECURITY': [{'TokenAuth': []}],  # For TokenAuth (adjust if using JWT or OAuth)
+    
+    # Optional: Add tags for better grouping
+    'TAGS': [
+        {
+            'name': 'Authentication',
+            'description': 'Endpoints for user registration, login, logout, email verification, password change, and password reset.'
+        },
+        {
+            'name': 'Products',
+            'description': 'Manage products, categories, and inventory.'
+        },
+        {
+            'name': 'Cart',
+            'description': 'Endpoints for managing user and guest shopping carts.'
+        },
+        {
+            'name': 'Orders',
+            'description': 'Endpoints for creating and managing orders.'
+        },
+    ],
+
+    # Optional: Default server info
+    'SERVERS': [
+        {'url': 'http://localhost:8000', 'description': 'Development server'},
+        {'url': 'https://api.glovendar.enghasan.com', 'description': 'Production server'}
+    ],
+
+    # Optional: Auto tags endpoints based on ViewSet or router
+    'AUTO_TAGS': 'list',  
+
+    # Optional: Customize schema output formatting
+    'SORT_OPERATIONS': True,
+    'TITLE_OVERRIDE': 'Glovendar E-Commerce API',
 }
+
 
 SITE_ID = 1
 
 
-# Disable the old deprecated settings
+# ----------------------------
+# User Authentication Settings
+# ----------------------------
+
+# Disable username requirement
 ACCOUNT_USERNAME_REQUIRED = False
+
+# Email is required and used for login
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
+
+# Email verification (optional, can be "mandatory" if needed)
 ACCOUNT_EMAIL_VERIFICATION = 'optional'
+
+# CSRF settings (for local development)
 CSRF_TRUSTED_ORIGINS = ["http://127.0.0.1:8000"]
 CSRF_COOKIE_SECURE = False
 

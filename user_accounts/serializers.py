@@ -1,25 +1,35 @@
 from dj_rest_auth.registration.serializers import RegisterSerializer
+from dj_rest_auth.serializers import LoginSerializer
 from rest_framework import serializers
 from .models import Profile
-from django.db import models # Added for get_or_create to work with the manager
+from django.contrib.auth.models import User
 
 class CustomRegistrationSerializer(RegisterSerializer):
     _has_phone_field = False
+    username = None 
+    email = serializers.EmailField(required=True)
     first_name = serializers.CharField(required=True)
     last_name = serializers.CharField(required=True)
     phone = serializers.CharField(required=True)
     address = serializers.CharField(required=True)
+    
+    def get_fields(self):
+        """Remove username from fields entirely for Swagger and DRF."""
+        fields = super().get_fields()
+        fields.pop('username', None)  # remove if exists
+        return fields
 
     def get_cleaned_data(self):
         """Returns validated registration data for user and profile."""
         # Use super() to get the base user data
         data = super().get_cleaned_data()
         
-        # Add the extra fields to the data dictionary
-        data['first_name'] = self.validated_data.get('first_name', '')
-        data['last_name'] = self.validated_data.get('last_name', '')
-        data['phone'] = self.validated_data.get('phone', '')
-        data['address'] = self.validated_data.get('address', '')
+        data.update({
+            'first_name': self.validated_data.get('first_name', ''), # type: ignore
+            'last_name': self.validated_data.get('last_name', ''),  # type: ignore
+            'phone': self.validated_data.get('phone', ''), # type: ignore
+            'address': self.validated_data.get('address', ''), # type: ignore
+        })
         
         return data
     
@@ -48,3 +58,39 @@ class CustomRegistrationSerializer(RegisterSerializer):
         profile.save()
         
         return user
+    
+
+class CustomLoginSerializer(LoginSerializer):
+    username = None
+    email = serializers.EmailField(required=True)
+    password = serializers.CharField(required=True, write_only=True)   
+    
+
+
+class ProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Profile
+        fields = ['phone', 'address']
+
+class UserSerializer(serializers.ModelSerializer):
+    profile = ProfileSerializer(required=True)
+
+    class Meta:
+        model = User
+        fields = ['id', 'username', 'email', 'first_name', 'last_name', 'profile']
+        read_only_fields = ['id', 'username', 'email']
+
+    def update(self, instance, validated_data):
+        profile_data = validated_data.pop('profile', {})
+        # Update user fields
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+        instance.save()
+
+        # Update profile fields
+        profile = instance.profile
+        for attr, value in profile_data.items():
+            setattr(profile, attr, value)
+        profile.save()
+
+        return instance
