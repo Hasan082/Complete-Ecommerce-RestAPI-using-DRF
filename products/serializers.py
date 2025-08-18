@@ -1,6 +1,6 @@
 from .models import Category, Product
 from rest_framework import serializers
-
+from drf_spectacular.utils import extend_schema_field
 
 class CategorySerializer(serializers.ModelSerializer):
 
@@ -56,6 +56,7 @@ class ProductSerializer(serializers.ModelSerializer):
             "updated_at",
         ]
 
+    @extend_schema_field(str)
     def get_stock_status(self, obj):
         return obj.stock_status()
 
