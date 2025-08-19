@@ -26,7 +26,7 @@ class CategoryViewSet(viewsets.ModelViewSet):
     description="Product Detailed description of what this API does.",
 )
 class ProductViewSet(ProductSearchOrderingMixin, viewsets.ModelViewSet):
-    queryset = Product.objects.all()
+    queryset = Product.objects.filter(is_active=True)
     serializer_class = ProductSerializer
     permission_classes = [IsAdminOrReadOnly]
     pagination_class = StandardResultPagination

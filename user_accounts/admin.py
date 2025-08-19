@@ -13,11 +13,11 @@ class CustomUserAdmin(BaseUserAdmin):
 
     model = CustomUser
 
-    list_display = ("email", "is_staff", "is_active")
+    list_display = ("email","first_name", "last_name", "is_staff", "is_active")
     list_filter = ("is_staff", "is_active")
 
     fieldsets = (
-        (None, {"fields": ("email", "password")}),
+        ("User Data", {"fields": ("email", "password", "first_name", "last_name")}),
         ("Permissions", {"fields": ("is_staff", "is_active", "groups", "user_permissions")}),
     )
     add_fieldsets = (
