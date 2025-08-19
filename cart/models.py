@@ -2,12 +2,12 @@ from decimal import Decimal
 from django.db import models
 from django.conf import settings
 from products.models import Product
-from django.contrib.auth.models import User
+from user_accounts.models  import CustomUser
 
 
 class Cart(models.Model):
     user = models.ForeignKey(
-        User, on_delete=models.SET_NULL, null=True, blank=True, related_name="carts"
+        CustomUser, on_delete=models.SET_NULL, null=True, blank=True, related_name="carts"
     )
 
     session_key = models.CharField(max_length=50, null=True, blank=True)
@@ -33,8 +33,17 @@ class Cart(models.Model):
         ]
 
     def __str__(self):
-        return f"Cart of {self.user.username if self.user else 'Anonymous'}"
+        """
+        Return a human-readable string representation of the cart.
 
+        If the cart is associated with a user, it returns "Cart of <full name or email>".
+        Otherwise, it returns "Cart of Anonymous".
+        """
+        if self.user:
+            full_name = f"{self.user.first_name} {self.user.last_name}".strip()
+            return f"Cart of {full_name or self.user.email}"
+        return "Cart of Anonymous"
+    
     @property
     def is_anonymous(self):
         return self.user is None
