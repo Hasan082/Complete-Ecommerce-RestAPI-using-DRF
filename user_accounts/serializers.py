@@ -37,8 +37,8 @@ class CustomRegistrationSerializer(RegisterSerializer):
         user.save()
 
         profile, created = Profile.objects.get_or_create(user=user)
-        user.phone = cleaned_data['phone']
-        user.address = cleaned_data['address']
+        profile.phone = cleaned_data['phone']
+        profile.address = cleaned_data['address']
         profile.save()
 
         return user

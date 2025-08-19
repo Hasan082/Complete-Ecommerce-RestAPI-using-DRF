@@ -1,5 +1,9 @@
+import os
 from pathlib import Path
-from allauth.account import app_settings as allauth_account_settings
+from dotenv import load_dotenv
+
+load_dotenv()
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -8,13 +12,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-()sykco5m(s&(&&@pqk59pkv^4r2l0_og1k)rl34eum-op^d(+'
+SECRET_KEY = os.getenv("DJANGO_SECURITY_KEY", default="unsafe-secret-key-change-me")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv("DJANGO_DEBUG", "False") == "True"
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 
@@ -86,13 +89,27 @@ WSGI_APPLICATION = 'core.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": os.getenv("POSTGRES_DB", default="drf_db_ecommerce"),
+        "USER": os.getenv("POSTGRES_USER", default="postgres"),
+        "PASSWORD": os.getenv("POSTGRES_PASSWORD", default="01712062236"),
+        "HOST": os.getenv("POSTGRES_HOST", default="127.0.0.1"),
+        "PORT": os.getenv("POSTGRES_PORT", default="5432"),
     }
 }
 
+
+
+# Custom User
+AUTH_USER_MODEL = 'user_accounts.CustomUser'
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
@@ -124,7 +141,6 @@ USE_I18N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
@@ -143,33 +159,53 @@ AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',  # default works if USERNAME_FIELD=email
 ]
 
-# Use the custom user model
-AUTH_USER_MODEL = 'user_accounts.CustomUser'
 
 # Email-only login
-ACCOUNT_USER_MODEL_USERNAME_FIELD = None
-ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_AUTHENTICATION_METHOD = "email"
 ACCOUNT_UNIQUE_EMAIL = True
-ACCOUNT_SIGNUP_FIELDS = ['password1', 'first_name', 'email', 'password2', 'last_name']
-ACCOUNT_LOGIN_METHODS = ['email']
+ACCOUNT_SIGNUP_FIELDS = ["email*", "password1", "password2", "first_name", "last_name"]
+ACCOUNT_EMAIL_VERIFICATION = "none"
 
-# Email verification (dev mode)
-ACCOUNT_EMAIL_VERIFICATION = 'none'
+
 
 # REST Framework + dj-rest-auth
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.TokenAuthentication',
     ],
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+}
+
+# django-allauth (email only)
+# Email-only login
+ACCOUNT_USER_MODEL_USERNAME_FIELD = None
+ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_AUTHENTICATION_METHOD = "email"
+ACCOUNT_UNIQUE_EMAIL = True
+ACCOUNT_EMAIL_VERIFICATION = "none"
+
+# dj-rest-auth serializers
+REST_AUTH_REGISTER_SERIALIZERS = {
     'REGISTER_SERIALIZER': 'user_accounts.serializers.CustomRegistrationSerializer',
     'LOGIN_SERIALIZER': 'user_accounts.serializers.CustomLoginSerializer',
     'USER_DETAILS_SERIALIZER': 'user_accounts.serializers.UserSerializer',
-    # SCHEMA SETTINGS
-    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
-    'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.TokenAuthentication',
-    ],
 }
+
+# REST_FRAMEWORK = {
+#     'DEFAULT_AUTHENTICATION_CLASSES': [
+#         'rest_framework.authentication.TokenAuthentication',
+#     ],
+#     'REST_AUTH_REGISTER_SERIALIZERS': 'user_accounts.serializers.CustomRegistrationSerializer',
+#     'LOGIN_SERIALIZER': 'user_accounts.serializers.CustomLoginSerializer',
+#     'USER_DETAILS_SERIALIZER': 'user_accounts.serializers.UserSerializer',
+#     # SCHEMA SETTINGS
+#     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+#     'DEFAULT_AUTHENTICATION_CLASSES': [
+#         'rest_framework.authentication.TokenAuthentication',
+#     ],
+# }
 
 
 SPECTACULAR_SETTINGS = {
