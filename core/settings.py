@@ -95,14 +95,16 @@ WSGI_APPLICATION = 'core.wsgi.application'
 #         'NAME': BASE_DIR / 'db.sqlite3',
 #     }
 # }
+import os
+
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": os.getenv("POSTGRES_DB", default="drf_db_ecommerce"),
-        "USER": os.getenv("POSTGRES_USER", default="postgres"),
-        "PASSWORD": os.getenv("POSTGRES_PASSWORD", default="01712062236"),
-        "HOST": os.getenv("POSTGRES_HOST", default="127.0.0.1"),
-        "PORT": os.getenv("POSTGRES_PORT", default="5432"),
+        "NAME": os.getenv("POSTGRES_DB", "drf_db_ecommerce"),
+        "USER": os.getenv("POSTGRES_USER", "postgres"),
+        "PASSWORD": os.getenv("POSTGRES_PASSWORD", "01712062236"),
+        "HOST": os.getenv("POSTGRES_HOST", "db"),
+        "PORT": os.getenv("POSTGRES_PORT", "5432"),
     }
 }
 
