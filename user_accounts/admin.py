@@ -32,8 +32,7 @@ class CustomUserAdmin(BaseUserAdmin):
 
 @admin.register(Profile)
 class ProfileAdmin(admin.ModelAdmin):
-    list_display = ('email', 'phone', 'address')
-
+    list_display = ('email', 'phone')
     def email(self, obj):
         return obj.user.email
     email.admin_order_field = 'user__email' # type: ignore
@@ -44,9 +43,5 @@ class ProfileAdmin(admin.ModelAdmin):
     phone.admin_order_field = 'user__phone' # type: ignore
     phone.short_description = 'Phone' # type: ignore 
     
-    def address(self, obj):
-        return obj.user.address
-    address.admin_order_field = 'user__address' # type: ignore
-    address.short_description = 'Address' # type: ignore 
     
     

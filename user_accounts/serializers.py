@@ -14,7 +14,6 @@ class CustomRegistrationSerializer(RegisterSerializer):
     first_name = serializers.CharField(required=False, allow_blank=True)
     last_name = serializers.CharField(required=False, allow_blank=True)
     phone = serializers.CharField(required=False, allow_blank=True)
-    address = serializers.CharField(required=False, allow_blank=True)
 
     def get_cleaned_data(self):
         """Return validated registration data for user and profile."""
@@ -23,7 +22,6 @@ class CustomRegistrationSerializer(RegisterSerializer):
             'first_name': self.validated_data.get('first_name', ''), # type: ignore
             'last_name': self.validated_data.get('last_name', ''), # type: ignore
             'phone': self.validated_data.get('phone', ''), # type: ignore
-            'address': self.validated_data.get('address', ''), # type: ignore
         })
         return data
 
@@ -38,7 +36,6 @@ class CustomRegistrationSerializer(RegisterSerializer):
 
         profile, created = Profile.objects.get_or_create(user=user)
         profile.phone = cleaned_data['phone']
-        profile.address = cleaned_data['address']
         profile.save()
 
         return user

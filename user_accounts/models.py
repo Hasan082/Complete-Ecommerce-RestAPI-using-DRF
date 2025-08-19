@@ -1,6 +1,10 @@
 from django.conf import settings
 from django.db import models
-from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
+from django.contrib.auth.models import (
+    AbstractBaseUser,
+    PermissionsMixin,
+    BaseUserManager,
+)
 
 
 class CustomUserManager(BaseUserManager):
@@ -22,6 +26,7 @@ class CustomUserManager(BaseUserManager):
             raise ValueError("Superuser must have is_superuser=True")
         return self.create_user(email, password, **extra_fields)
 
+
 class CustomUser(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(unique=True)
     first_name = models.CharField(max_length=50, blank=True)
@@ -33,21 +38,40 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []
-    
+
     class Meta:
         verbose_name = "User"
         verbose_name_plural = "Users"
 
     def __str__(self):
         return self.email
-    
-    
+
+
 class Profile(models.Model):
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='profile')
+    user = models.OneToOneField(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="profile"
+    )
     phone = models.CharField(max_length=14, blank=True, null=True)
-    address = models.CharField(max_length=255, blank=True, null=True)
+
+    # Present Address
+    present_full_name = models.CharField(max_length=255, blank=True, null=True)
+    present_street_address = models.CharField(max_length=255, blank=True, null=True)
+    present_apartment = models.CharField(max_length=255, blank=True, null=True)
+    present_city = models.CharField(max_length=100, blank=True, null=True)
+    present_state = models.CharField(max_length=100, blank=True, null=True)
+    present_postal_code = models.CharField(max_length=20, blank=True, null=True)
+    present_country = models.CharField(max_length=100, blank=True, null=True)
+
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    
+
     def __str__(self):
         return f"{self.user.email}'s profile"
+
+    def save(self, *args, **kwargs):
+        # Auto-fill full name if not set and user has first/last name
+        if not self.present_full_name:
+            full_name = self.user.get_full_name()  # combines first_name + last_name
+            if full_name:
+                self.present_full_name = full_name
+        super().save(*args, **kwargs)
