@@ -7,37 +7,54 @@ from dj_rest_auth.views import (
     UserDetailsView
 )
 from cart.utils import merge_carts_on_login
+from user_accounts.serializers import UserSerializer, CustomRegistrationSerializer
+
+class RegisterView(generics.CreateAPIView):
+    userusername = None
+    serializer_class = CustomRegistrationSerializer
 
 
 class UserDetailsViewSet(UserDetailsView):
+    serializer_class = UserSerializer
+
     def get(self, request, *args, **kwargs):
-        """
-        GET request handler for user details viewset.
-
-        This method is overridden to merge the guest cart into the user's cart
-        when the user logs in and views their account details.
-
-        :param request: The current request object
-        :param args: Additional positional arguments
-        :param kwargs: Additional keyword arguments
-        :return: The response object
-        """
         merge_carts_on_login(request, request.user)
         return super().get(request, *args, **kwargs)
-    
+
     def put(self, request, *args, **kwargs):
-        """
-        PUT request handler for user details viewset.
-
-        This method is overridden to merge the guest cart into the user's cart
-        when the user updates their account details.
-
-        :param request: The current request object
-        :param args: Additional positional arguments
-        :param kwargs: Additional keyword arguments
-        :return: The response object
-        """
         merge_carts_on_login(request, request.user)
-        return super().put(request, *args, **kwargs)    # type: ignore
+        return super().put(request, *args, **kwargs)
+
+
+# class UserDetailsViewSet(UserDetailsView):
+#     def get(self, request, *args, **kwargs):
+#         """
+#         GET request handler for user details viewset.
+
+#         This method is overridden to merge the guest cart into the user's cart
+#         when the user logs in and views their account details.
+
+#         :param request: The current request object
+#         :param args: Additional positional arguments
+#         :param kwargs: Additional keyword arguments
+#         :return: The response object
+#         """
+#         merge_carts_on_login(request, request.user)
+#         return super().get(request, *args, **kwargs)
+    
+#     def put(self, request, *args, **kwargs):
+#         """
+#         PUT request handler for user details viewset.
+
+#         This method is overridden to merge the guest cart into the user's cart
+#         when the user updates their account details.
+
+#         :param request: The current request object
+#         :param args: Additional positional arguments
+#         :param kwargs: Additional keyword arguments
+#         :return: The response object
+#         """
+#         merge_carts_on_login(request, request.user)
+#         return super().put(request, *args, **kwargs)    # type: ignore
 
 

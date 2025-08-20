@@ -189,25 +189,12 @@ ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_EMAIL_VERIFICATION = "none"
 
 # dj-rest-auth serializers
-REST_AUTH_REGISTER_SERIALIZERS = {
-    'REGISTER_SERIALIZER': 'user_accounts.serializers.CustomRegistrationSerializer',
+REST_AUTH = {
+    "REGISTER_SERIALIZER": "user_accounts.serializers.CustomRegistrationSerializer",
     'LOGIN_SERIALIZER': 'user_accounts.serializers.CustomLoginSerializer',
     'USER_DETAILS_SERIALIZER': 'user_accounts.serializers.UserSerializer',
+    'OLD_PASSWORD_FIELD_ENABLED': True,
 }
-
-# REST_FRAMEWORK = {
-#     'DEFAULT_AUTHENTICATION_CLASSES': [
-#         'rest_framework.authentication.TokenAuthentication',
-#     ],
-#     'REST_AUTH_REGISTER_SERIALIZERS': 'user_accounts.serializers.CustomRegistrationSerializer',
-#     'LOGIN_SERIALIZER': 'user_accounts.serializers.CustomLoginSerializer',
-#     'USER_DETAILS_SERIALIZER': 'user_accounts.serializers.UserSerializer',
-#     # SCHEMA SETTINGS
-#     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
-#     'DEFAULT_AUTHENTICATION_CLASSES': [
-#         'rest_framework.authentication.TokenAuthentication',
-#     ],
-# }
 
 
 SPECTACULAR_SETTINGS = {
@@ -271,4 +258,5 @@ SITE_ID = 1
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 
-# ACCOUNT_ADAPTER = "user_accounts.adapter.CustomAccountAdapter"
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
