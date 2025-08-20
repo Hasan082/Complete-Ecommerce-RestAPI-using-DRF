@@ -56,7 +56,7 @@ class Product(TimeStampedModel):
     is_active = models.BooleanField(default=True)
 
     
-    class Meta:
+    class Meta(TimeStampedModel.Meta):
         ordering = ["-created_at"]
         
     def clean(self):

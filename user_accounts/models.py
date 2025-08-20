@@ -6,6 +6,8 @@ from django.contrib.auth.models import (
     BaseUserManager,
 )
 
+from common.helper_models import TimeStampedModel
+
 
 class CustomUserManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
@@ -47,7 +49,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         return self.email
 
 
-class Profile(models.Model):
+class Profile(TimeStampedModel):
     user = models.OneToOneField(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="profile"
     )
@@ -61,9 +63,6 @@ class Profile(models.Model):
     present_state = models.CharField(max_length=100, blank=True, null=True)
     present_postal_code = models.CharField(max_length=20, blank=True, null=True)
     present_country = models.CharField(max_length=100, blank=True, null=True)
-
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return f"{self.user.email}'s profile"

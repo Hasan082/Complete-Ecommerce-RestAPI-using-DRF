@@ -1,20 +1,20 @@
 from decimal import Decimal
 from django.db import models
 from django.conf import settings
+from common.helper_models import TimeStampedModel
 from products.models import Product
 from user_accounts.models  import CustomUser
 
 
-class Cart(models.Model):
+class Cart(TimeStampedModel):
     user = models.ForeignKey(
         CustomUser, on_delete=models.SET_NULL, null=True, blank=True, related_name="carts"
     )
 
     session_key = models.CharField(max_length=50, null=True, blank=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
 
-    class Meta:
+
+    class Meta(TimeStampedModel.Meta):
         constraints = [
             models.CheckConstraint(
                 check=models.Q(user__isnull=True) | models.Q(session_key__isnull=True),
