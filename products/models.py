@@ -5,7 +5,7 @@ from django.urls import reverse
 from django.utils.text import slugify
 from autoslug import AutoSlugField
 from django.core.exceptions import ValidationError
-
+from common.helper_models import TimeStampedModel
 
 class Category(models.Model):
     name = models.CharField(max_length=100, unique=True)
@@ -34,7 +34,7 @@ class Category(models.Model):
         return self.name
 
 
-class Product(models.Model):
+class Product(TimeStampedModel):
     title = models.CharField(max_length=100)
     slug = AutoSlugField(populate_from="title", unique=True, db_index=True)  # type: ignore
     description = models.TextField(blank=True)
@@ -54,8 +54,7 @@ class Product(models.Model):
         max_digits=10, decimal_places=2, null=True, blank=True, editable=False
     )
     is_active = models.BooleanField(default=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+
     
     class Meta:
         ordering = ["-created_at"]

@@ -2,7 +2,7 @@ from django.conf import settings
 from django.db import models
 from products.models import Product
 from decimal import Decimal
-from common.helper_models import Address
+from common.helper_models import Address, TimeStampedModel
 
 
 class ShippingAddress(Address):
@@ -13,7 +13,7 @@ class BillingAddress(Address):
     pass
 
 
-class Order(models.Model):
+class Order(TimeStampedModel):
     STATUS_CHOICES = [
         ("pending", "Pending"),
         ("paid", "Paid"),
@@ -36,8 +36,8 @@ class Order(models.Model):
     total_amount = models.DecimalField(
         max_digits=10, decimal_places=2, default=Decimal("0.00")
     )
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    # created_at = models.DateTimeField(auto_now_add=True)
+    # updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         """
