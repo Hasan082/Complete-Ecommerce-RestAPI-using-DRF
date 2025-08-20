@@ -1,29 +1,30 @@
-# Use Official Python image
+# Use Official Python slim image
 FROM python:3.11-slim
 
 # Set environment variables
-ENV PYTHONDONTWRITEBYTECODE 1
-ENV PYTHONBUFFERED=1
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PIP_NO_CACHE_DIR=1
 
-# Set work directory
+# Set working directory
 WORKDIR /app
 
-# Install System Dependancy
-RUN apt-get update && apt-get install -y \
-    --no-install-recommends gcc libpq-dev \
+# Install system dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    gcc \
+    libpq-dev \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy dependancy
-COPY requirements.txt requirements.txt
-# Install python Dependancy
-RUN pip install --upgrade pip
-RUN pip install -r requirements.txt
+# Install Python dependencies in one layer for caching
+COPY requirements.txt .
+RUN pip install --upgrade pip \
+    && pip install --no-cache-dir -r requirements.txt
 
-# Copy Django project
+# Copy project files
 COPY . .
 
 # Expose port
 EXPOSE 8000
 
-# Run server
+# Run server (Django dev server – not for production)
 CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
