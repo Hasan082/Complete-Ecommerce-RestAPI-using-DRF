@@ -219,21 +219,6 @@ SPECTACULAR_SETTINGS = {
     # Authentication
     'SECURITY': [{'TokenAuth': []}],  # For TokenAuth (adjust if using JWT or OAuth)
     
-    # Optional: Add tags for better grouping
-    'TAGS': [
-        {
-            'name': 'Products',
-            'description': 'Manage products, categories, and inventory.'
-        },
-        {
-            'name': 'Cart',
-            'description': 'Endpoints for managing user and guest shopping carts.'
-        },
-        {
-            'name': 'Orders',
-            'description': 'Endpoints for creating and managing orders.'
-        },
-    ],
 
     # Optional: Default server info
     # 'SERVERS': [
