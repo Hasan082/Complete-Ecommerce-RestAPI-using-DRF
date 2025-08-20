@@ -2,6 +2,15 @@ from django.conf import settings
 from django.db import models
 from products.models import Product
 from decimal import Decimal
+from common.helper_models import Address
+
+
+class ShippingAddress(Address):
+    pass
+
+
+class BillingAddress(Address):
+    pass
 
 
 class Order(models.Model):
@@ -16,6 +25,12 @@ class Order(models.Model):
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="orders"
     )
+    shipping_address = models.OneToOneField(
+        ShippingAddress, on_delete=models.CASCADE, related_name="order"
+    )
+    billing_address = models.OneToOneField(
+        BillingAddress, on_delete=models.CASCADE, related_name="order"
+    )
     order_number = models.CharField(max_length=20, unique=True)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default="pending")
     total_amount = models.DecimalField(
@@ -23,26 +38,6 @@ class Order(models.Model):
     )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-
-    # Shipping snapshot
-    shipping_full_name = models.CharField(max_length=255)
-    shipping_street_address = models.CharField(max_length=255)
-    shipping_apartment = models.CharField(max_length=255, blank=True, null=True)
-    shipping_city = models.CharField(max_length=100)
-    shipping_state = models.CharField(max_length=100, blank=True, null=True)
-    shipping_postal_code = models.CharField(max_length=20)
-    shipping_country = models.CharField(max_length=100)
-    shipping_phone = models.CharField(max_length=20, blank=True, null=True)
-
-    # Billing snapshot
-    billing_full_name = models.CharField(max_length=255)
-    billing_street_address = models.CharField(max_length=255)
-    billing_apartment = models.CharField(max_length=255, blank=True, null=True)
-    billing_city = models.CharField(max_length=100)
-    billing_state = models.CharField(max_length=100, blank=True, null=True)
-    billing_postal_code = models.CharField(max_length=20)
-    billing_country = models.CharField(max_length=100)
-    billing_phone = models.CharField(max_length=20, blank=True, null=True)
 
     def __str__(self):
         """

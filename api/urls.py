@@ -7,13 +7,14 @@ from drf_spectacular.views import (
 from products.views import CategoryViewSet, ProductViewSet
 from cart.views import CartViewSet
 from rest_framework.routers import DefaultRouter
-from user_accounts.views import UserDetailsViewSet, RegisterView
+from orders.views import OrderViewwSet
 from dj_rest_auth.views import PasswordResetConfirmView
 
 router = DefaultRouter()
 router.register(r"categories", CategoryViewSet, basename="category")
 router.register(r"products", ProductViewSet, basename="products")
 router.register(r"cart", CartViewSet, basename="cart")
+router.register(r"order", OrderViewwSet, basename="order")
 
 
 urlpatterns = [
