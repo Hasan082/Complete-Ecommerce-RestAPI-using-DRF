@@ -1,6 +1,3 @@
-Here’s a concise **README.md** template for your Django REST Framework project with DRF Spectacular and dj-rest-auth:
-
-````markdown
 # Django E-Commerce API
 
 This project is a **Django REST Framework (DRF)** based e-commerce API with authentication, product and category management, cart and order handling, and API documentation using **drf-spectacular**.
