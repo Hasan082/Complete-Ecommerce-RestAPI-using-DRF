@@ -36,16 +36,12 @@ class BillingAddressSerializer(BaseAddressSerializer):
 
 # --- Order Item ---
 class OrderItemSerializers(serializers.ModelSerializer):
-    shipping_address = ShippingAddressSerializer()
-    billing_address = BillingAddressSerializer()
     product_title = serializers.CharField(source="product.title", read_only=True)
     total_price = serializers.SerializerMethodField()
 
     class Meta:
         model = OrderItem
         fields = [
-            "shipping_address",
-            "billing_address",
             "product_title",
             "quantity",
             "price",
@@ -59,6 +55,8 @@ class OrderItemSerializers(serializers.ModelSerializer):
 # --- Order ---
 class OrderSerializer(serializers.ModelSerializer):
     items = OrderItemSerializers(many=True)
+    shipping_address = ShippingAddressSerializer()
+    billing_address = BillingAddressSerializer()
 
     class Meta:
         model = Order
@@ -67,33 +65,28 @@ class OrderSerializer(serializers.ModelSerializer):
             "order_number",
             "status",
             "total_amount",
+            "shipping_address",
+            "billing_address",
             "created_at",
             "updated_at",
         ]
 
     def create(self, validated_data):
         items_data = validated_data.pop("items")
-        order = Order.objects.create(**validated_data)
+        shipping_data = validated_data.pop("shipping_address")
+        billing_data = validated_data.pop("billing_address")
 
+        # Create addresses
+        shipping = ShippingAddress.objects.create(**shipping_data)
+        billing = BillingAddress.objects.create(**billing_data)
+
+        # Create order
+        order = Order.objects.create(
+            shipping_address=shipping, billing_address=billing, **validated_data
+        )
+
+        # Create order items
         for item_data in items_data:
-            # Extract nested addresses
-            shipping_data = item_data.pop("shipping_address", None)
-            billing_data = item_data.pop("billing_address", None)
-
-            # Get or create addresses to avoid duplicates
-            shipping = None
-            billing = None
-            if shipping_data:
-                shipping, _ = ShippingAddress.objects.get_or_create(**shipping_data)
-            if billing_data:
-                billing, _ = BillingAddress.objects.get_or_create(**billing_data)
-
-            # Create order item
-            OrderItem.objects.create(
-                order=order,
-                shipping_address=shipping,
-                billing_address=billing,
-                **item_data
-            )
+            OrderItem.objects.create(order=order, **item_data)
 
         return order
